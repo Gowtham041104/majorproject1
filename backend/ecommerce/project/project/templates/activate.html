@@ -1,0 +1,18 @@
+<!-- templates/activate.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Activate Your Account</title>
+</head>
+<body>
+  <h2>Hello {{ user.first_name }},</h2>
+  <p>Thank you for registering. Please click the link below to activate your account:</p>
+  <p>
+    <a href="http://{{ domain }}/api/users/activate/{{ uid }}/{{ token }}/">
+      Activate My Account
+    </a>
+  </p>
+  <p>If you didn’t create this account, you can safely ignore this email.</p>
+</body>
+</html>
