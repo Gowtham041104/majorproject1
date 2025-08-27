@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../Message'
 import Loader from '../Loader'
-import { getOrderDetails, deliverOrder } from '../../actions/orderAction'
+import { getOrderDetails, deliverOrder } from '../../actions/orderActions'
 
 function OrderScreen() {
   const { id } = useParams()

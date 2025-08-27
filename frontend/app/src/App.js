@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import { Container } from "react-bootstrap";
 import Home from "./components/Home";
@@ -19,6 +19,23 @@ import UserListScreen from "./components/screen/UserListScreen";
 import UserEditScreen from "./components/screen/UserEditScreen";
 import ProfileScreen from "./components/screen/ProfileScreen";
 
+import { useSelector } from "react-redux";
+
+const RequireAuth = ({ children }) => {
+  const { userInfo } = useSelector((s) => s.userLogin || {});
+  const location = useLocation();
+  if (!userInfo) {
+    return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`} replace />;
+  }
+  return children;
+};
+
+const AdminOnly = ({ children }) => {
+  const { userInfo } = useSelector((s) => s.userLogin || {});
+  if (!userInfo || !userInfo.isAdmin) return <Navigate to="/login" replace />;
+  return children;
+};
+
 export default function App() {
   return (
     <>
@@ -27,49 +44,27 @@ export default function App() {
         <main>
           <Container>
             <Routes>
-              <Route path="/" element={<Home />} />
-            </Routes>
-            <Routes>
-              <Route path="/product/:id" element={<ProductDetails />} />
-            </Routes>
-            <Routes>
-              <Route path="/signup" element={<SignupScreen />} />
-            </Routes>
-            <Routes>
+              {/* Public */}
+              <Route path="/" element={<LoginScreen />} />
               <Route path="/login" element={<LoginScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/cart/:id?" element={<CartScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/checkout" element={<ShippingScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/placeorder" element={<PlaceOrderScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/payment" element={<PaymentScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/order/:id" element={<OrderScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/admin/productList" element={<ProductListScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/admin/product/:id/edit" element={<ProductEditScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/admin/orderlist" element={<OrderListScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/admin/userlist" element={<UserListScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
-            </Routes>
-            <Routes>
-              <Route path="/profile" element={<ProfileScreen />} />
+              <Route path="/signup" element={<SignupScreen />} />
+
+              {/* Protected */}
+              <Route path="/home" element={<RequireAuth><Home /></RequireAuth>} />
+              <Route path="/product/:id" element={<RequireAuth><ProductDetails /></RequireAuth>} />
+              <Route path="/cart/:id?" element={<RequireAuth><CartScreen /></RequireAuth>} />
+              <Route path="/checkout" element={<RequireAuth><ShippingScreen /></RequireAuth>} />
+              <Route path="/payment" element={<RequireAuth><PaymentScreen /></RequireAuth>} />
+              <Route path="/placeorder" element={<RequireAuth><PlaceOrderScreen /></RequireAuth>} />
+              <Route path="/order/:id" element={<RequireAuth><OrderScreen /></RequireAuth>} />
+              <Route path="/profile" element={<RequireAuth><ProfileScreen /></RequireAuth>} />
+
+              {/* Admin */}
+              <Route path="/admin/productList" element={<AdminOnly><ProductListScreen /></AdminOnly>} />
+              <Route path="/admin/product/:id/edit" element={<AdminOnly><ProductEditScreen /></AdminOnly>} />
+              <Route path="/admin/orderlist" element={<AdminOnly><OrderListScreen /></AdminOnly>} />
+              <Route path="/admin/userlist" element={<AdminOnly><UserListScreen /></AdminOnly>} />
+              <Route path="/admin/user/:id/edit" element={<AdminOnly><UserEditScreen /></AdminOnly>} />
             </Routes>
           </Container>
         </main>

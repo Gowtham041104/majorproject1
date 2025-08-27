@@ -20,7 +20,7 @@ function LoginScreen() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const redirect = new URLSearchParams(location.search).get('redirect') || '/home';
 
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
@@ -92,9 +92,9 @@ function LoginScreen() {
   };
     useEffect(()=>{
       if(userInfo){
-       navigate("/")
+       navigate(redirect)
       }
-    },[userInfo,redirect])
+    },[userInfo, redirect, navigate])
 
   return (
     <Container>

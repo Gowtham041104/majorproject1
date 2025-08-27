@@ -4,7 +4,7 @@ import {  Link,useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../Message'
 import Loader from '../Loader'
-import { listOrders } from '../../actions/orderAction';
+import { listOrders } from '../../actions/orderActions';
 import { LinkContainer } from 'react-router-bootstrap'
 
 function OrderListScreen() {

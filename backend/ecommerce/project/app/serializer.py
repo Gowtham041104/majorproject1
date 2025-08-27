@@ -4,9 +4,29 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Order, OrderItem, ShippingAddress,Product
 
 class ProductSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
-        model=Product
-        fields='__all__'
+        model = Product
+        fields = '__all__'
+
+    def get_image(self, obj):
+        # Prefer uploaded image URL if present
+        try:
+            if obj.image and hasattr(obj.image, 'url'):
+                return obj.image.url
+        except Exception:
+            pass
+
+        # Fallback to static mapping used previously in frontend
+        try:
+            from .products import products
+            for p in products:
+                if str(p.get('_id')) == str(getattr(obj, '_id', '')):
+                    return p.get('image', '')
+        except Exception:
+            pass
+        return ''
 
 # Base User Serializer
 class UserSerializer(serializers.ModelSerializer):
@@ -74,8 +94,19 @@ class OrderSerializer(serializers.ModelSerializer):
     
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)  # nest product info here
+    product = ProductSerializer(read_only=True)
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderItem
         fields = '__all__'
+
+    def get_image(self, obj):
+        # Use stored image if present (already a URL or path)
+        if getattr(obj, 'image', ''):
+            return obj.image
+        # Fallback to product's resolved image
+        try:
+            return ProductSerializer(obj.product).data.get('image', '')
+        except Exception:
+            return ''

@@ -6,7 +6,7 @@ import Loader from '../Loader';
 import Message from '../Message';
 import { getUserDetails,updateUserProfile } from '../../actions/userActions';
 import { USER_UPDATE_PROFILE_RESET } from '../../constants/userConstants';
-import { listMyOrders } from '../../actions/orderAction';
+import { listMyOrders } from '../../actions/orderActions';
 
 import { LinkContainer } from 'react-router-bootstrap'
 
@@ -29,28 +29,34 @@ function ProfileScreen() {
     const { success } = userUpdateProfile
 
     const ordersMyList = useSelector(state => state.orderMyList)
-    const { loading: loadingOrders, error: errorOrders, orders } = ordersMyList
+    const { loading: loadingOrders, error: errorOrders, orders = [] } = ordersMyList || {}
 
+    // Load user details and hydrate form
     useEffect(() => {
         if (!userInfo) {
             navigate('/login');
-        } else {
-            if (!user || !user.first_name || !user.last_name || success || userInfo._id !== user._id) {
-       
-                dispatch({ type: USER_UPDATE_PROFILE_RESET });
-                dispatch(getUserDetails(userInfo._id));
-                dispatch(listMyOrders(orders));
-            } 
-            
-            else {
-                setFname(user.first_name);
-                setLname(user.last_name);
-            }
+            return;
         }
 
-        dispatch(listMyOrders(orders));
-  
-    }, [dispatch, userInfo,user, success, navigate]);
+        if (!user || user.id !== userInfo.id || success) {
+            dispatch({ type: USER_UPDATE_PROFILE_RESET });
+            dispatch(getUserDetails(userInfo.id));
+            return;
+        }
+
+        const nameSource = user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : (user.name || userInfo.name || '');
+        const [first = '', ...rest] = nameSource.split(' ');
+        const last = rest.join(' ');
+        setFname(first);
+        setLname(last);
+    }, [dispatch, userInfo, user?.id, success, navigate]);
+
+    // Load orders once when logged in
+    useEffect(() => {
+        if (userInfo) {
+            dispatch(listMyOrders());
+        }
+    }, [dispatch, userInfo]);
 
 
     const submitHandler = (e) => {
@@ -162,10 +168,10 @@ function ProfileScreen() {
                                 </thead>
 
                                 <tbody>
-                                    {orders.map(order => (
+                                    {(orders || []).map(order => (
                                         <tr key={order._id}>
                                             <td>{order._id}</td>
-                                            <td>{order.createdAt.substring(0, 10)}</td>
+                                            <td>{order.createdAt ? order.createdAt.substring(0, 10) : ''}</td>
                                             <td>Rs {order.totalPrice}</td>
                                             <td>{order.isPaid ? order.paidAt.substring(0, 10) : (
                                                 <i className='fas fa-times' style={{ color: 'red' }}></i>

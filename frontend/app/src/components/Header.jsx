@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Container, Nav,NavDropdown } from "react-bootstrap";
+import { Navbar, Container, Nav, NavDropdown, Badge } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import Loader from "./Loader";
 import Message from "./Message";
@@ -10,6 +10,8 @@ function Header() {
 
   const userLogin = useSelector((state)=>state.userLogin);
   const {userInfo}=userLogin;
+  const cart = useSelector((state)=> state.cart || { cartItems: [] });
+  const cartCount = (cart.cartItems || []).reduce((sum, item) => sum + (item.qty || 0), 0);
   const dispatch=useDispatch();
   const navigate = useNavigate();
 
@@ -21,24 +23,26 @@ function Header() {
     <>
       <Navbar bg="dark" variant="dark" collapseOnSelect>
         <Container>
-          <LinkContainer to="/">
+          <LinkContainer to="/home">
             <Navbar.Brand>Ecommerce Page </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <LinkContainer to="/">
-                <Nav.Link Link="/">Home</Nav.Link>
+              <LinkContainer to="/home">
+                <Nav.Link>Home</Nav.Link>
               </LinkContainer>
              
               
               <LinkContainer to="/cart">
-                <Nav.Link Link="/">Cart</Nav.Link>
+                <Nav.Link>
+                  Cart {cartCount > 0 && (<Badge bg="warning" text="dark">{cartCount}</Badge>)}
+                </Nav.Link>
               </LinkContainer>
                             <LinkContainer to="/checkout">
-                <Nav.Link Link="/">Checkout</Nav.Link>
+                <Nav.Link>Checkout</Nav.Link>
               </LinkContainer>
-                   
+                    
 {userInfo ? (
   <li className="nav-item dropdown">
     <Nav.Link
@@ -51,6 +55,9 @@ function Header() {
       Welcome {userInfo.name}
     </Nav.Link>
     <div className="dropdown-menu">
+      <LinkContainer to="/profile">
+        <Nav.Link className="dropdown-item text-dark">Profile</Nav.Link>
+      </LinkContainer>
       <Nav.Link className="dropdown-item text-dark" onClick={logoutHandler}>
         Logout
       </Nav.Link>
@@ -77,7 +84,7 @@ function Header() {
                                         <NavDropdown.Item>Users</NavDropdown.Item>
                                     </LinkContainer>
 
-                                    <LinkContainer to='/admin/productlist'>
+                                    <LinkContainer to='/admin/productList'>
                                         <NavDropdown.Item>Products</NavDropdown.Item>
                                     </LinkContainer>
 
