@@ -34,6 +34,8 @@ import {
 } from '../constants/userConstants';
 import { ORDER_CREATE_SUCCESS, ORDER_DETAILS_REQUEST } from '../constants/orderConstants';
 
+const API = process.env.REACT_APP_API_BASE || '';
+
 // Signup Action Creator
 export const signup = (firstname, lastname, email, password) => async (dispatch) => {
   try {
@@ -47,7 +49,7 @@ export const signup = (firstname, lastname, email, password) => async (dispatch)
 
     // Make sure to send exactly what backend expects
     const { data } = await axios.post(
-      '/api/users/register/',
+      `${API}/api/users/register/`,
       {
         fname: firstname,  // Django expects 'fname'
         lname: lastname,    // Django expects 'name' (last name)
@@ -86,7 +88,7 @@ export const login = (email, password) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      '/api/users/login/',
+      `${API}/api/users/login/`,
       {
         username: email,  // assuming backend expects 'username' for login
         password: password,
@@ -137,7 +139,7 @@ export const listUsers = () => async (dispatch, getState) => {
       }
 
       const { data } = await axios.get(
-          `/api/users/getallusers/`,
+          `${API}/api/users/getallusers/`,
           config
       )
 
@@ -176,7 +178,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
       }
 
       const { data } = await axios.delete(
-          `/api/users/delete/${id}/`,
+          `${API}/api/users/delete/${id}/`,
           config
       )
 
@@ -215,7 +217,7 @@ export const updateUser = (user) => async (dispatch, getState) => {
       }
 
       const { data } = await axios.put(
-          `/api/users/update/${user._id}/`,
+          `${API}/api/users/update/${user._id}/`,
           user,
           config
       )
@@ -262,7 +264,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
       }
 
       const { data } = await axios.get(
-          `/api/users/${id}/`,
+          `${API}/api/users/${id}/`,
           config
       )
 
@@ -301,7 +303,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       }
 
       const { data } = await axios.put(
-          `/api/users/profile/update/`,
+          `${API}/api/users/profile/update/`,
           user,
           config
       )

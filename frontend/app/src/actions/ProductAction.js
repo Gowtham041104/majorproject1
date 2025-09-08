@@ -18,12 +18,14 @@ import {
   PRODUCT_UPDATE_RESET,
 } from '../constants/productConstants';
 
+const API = process.env.REACT_APP_API_BASE || '';
+
 // Fetch product list
 export const listProducts = () => async (dispatch) => {
   try {
     dispatch({ type: 'PRODUCT_LIST_REQUEST' })
 
-    const { data } = await axios.get('/api/products/') // this should return array of products
+    const { data } = await axios.get(`${API}/api/products/`) // this should return array of products
 
     dispatch({
       type: 'PRODUCT_LIST_SUCCESS',
@@ -42,7 +44,7 @@ export const listProducts = () => async (dispatch) => {
 export const listProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
-    const { data } = await axios.get(`/api/products/${id}/`);
+    const { data } = await axios.get(`${API}/api/products/${id}/`);
     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -69,7 +71,7 @@ export const createProduct = () => async (dispatch, getState) => {
     }
 
     // Make sure URL is correct and POST is allowed on backend
-    const { data } = await axios.post('/api/products/create/', {}, config)
+    const { data } = await axios.post(`${API}/api/products/create/`, {}, config)
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
@@ -103,7 +105,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(`/api/products/update/${product._id}/`, product, config);
+    const { data } = await axios.put(`${API}/api/products/update/${product._id}/`, product, config);
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
       payload: data,
@@ -136,7 +138,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.delete(`/api/products/delete/${id}/`, config);
+    const { data } = await axios.delete(`${API}/api/products/delete/${id}/`, config);
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
       payload: data,

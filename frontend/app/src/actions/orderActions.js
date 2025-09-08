@@ -1,24 +1,21 @@
 import { ORDER_CREATE_REQUEST,ORDER_CREATE_SUCCESS,ORDER_CREATE_FAIL,ORDER_CREATE_RESET,ORDER_DETAILS_REQUEST,ORDER_DETAILS_SUCCESS,ORDER_DETAILS_FAIL ,
-
-
     ORDER_DELIVER_REQUEST,
     ORDER_DELIVER_SUCCESS,
     ORDER_DELIVER_FAIL,
     ORDER_DELIVER_RESET,
-
     ORDER_LIST_REQUEST,
     ORDER_LIST_SUCCESS,
     ORDER_LIST_FAIL,
-
     ORDER_LIST_MY_REQUEST,
     ORDER_LIST_MY_SUCCESS,
     ORDER_LIST_MY_FAIL,
     ORDER_LIST_MY_RESET,
-
-
 } from "../constants/orderConstants";
 import axios from 'axios'
 import {CART_CLEAR_ITEMS} from '../constants/cartConstants'
+
+const API = process.env.REACT_APP_API_BASE || '';
+ 
 
 
 export const createOrder =(order)=> async (dispatch,getState)=>{
@@ -38,7 +35,7 @@ export const createOrder =(order)=> async (dispatch,getState)=>{
             }
         }
 
-        const {data}=await axios.post(`/api/orders/add/`,order,config)
+        const {data}=await axios.post(`${API}/api/orders/add/`,order,config)
 
         dispatch({
             type: ORDER_CREATE_SUCCESS,
@@ -81,7 +78,7 @@ export const getOrderDetails=(id)=> async (dispatch,getState)=>{
             }
         }
 
-        const {data}=await axios.get(`/api/orders/${id}/`,config)
+        const {data}=await axios.get(`${API}/api/orders/${id}/`,config)
 
         dispatch({
             type: ORDER_DETAILS_SUCCESS,
@@ -120,7 +117,7 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
         }
 
         const { data } = await axios.put(
-            `/api/orders/${order._id}/deliver/`,
+            `${API}/api/orders/${order._id}/deliver/`,
             {},
             config
         )
@@ -163,7 +160,7 @@ export const listOrders = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `/api/orders/`,
+            `${API}/api/orders/`,
             config
         )
 
@@ -202,7 +199,7 @@ export const listMyOrders = () => async (dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `/api/orders/myorders/`,
+            `${API}/api/orders/myorders/`,
             config
         )
 
