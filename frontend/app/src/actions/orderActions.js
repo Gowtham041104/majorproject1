@@ -14,7 +14,7 @@ import { ORDER_CREATE_REQUEST,ORDER_CREATE_SUCCESS,ORDER_CREATE_FAIL,ORDER_CREAT
 import axios from 'axios'
 import {CART_CLEAR_ITEMS} from '../constants/cartConstants'
 
-const API = process.env.REACT_APP_API_BASE || '';
+const API = process.env.REACT_APP_API_BASE || 'https://majorproject1-6toy.onrender.com';
  
 
 

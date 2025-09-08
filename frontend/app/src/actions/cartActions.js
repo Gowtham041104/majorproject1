@@ -1,6 +1,6 @@
 import { CART_ADD_ITEM, CART_REMOVE_ITEM ,CART_SAVE_PAYMENT_METHOD,CART_SAVE_SHIPPING_ADDRESS} from "../constants/cartConstants";
 import axios from "axios";
-const API = process.env.REACT_APP_API_BASE || '';
+const API = process.env.REACT_APP_API_BASE || 'https://majorproject1-6toy.onrender.com';
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const { data } = await axios.get(`${API}/api/products/${id}`); // ✅ corrected route

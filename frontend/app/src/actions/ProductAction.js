@@ -18,7 +18,7 @@ import {
   PRODUCT_UPDATE_RESET,
 } from '../constants/productConstants';
 
-const API = process.env.REACT_APP_API_BASE || '';
+const API = process.env.REACT_APP_API_BASE || 'https://majorproject1-6toy.onrender.com';
 
 // Fetch product list
 export const listProducts = () => async (dispatch) => {

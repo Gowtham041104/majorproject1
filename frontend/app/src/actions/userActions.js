@@ -34,7 +34,7 @@ import {
 } from '../constants/userConstants';
 import { ORDER_CREATE_SUCCESS, ORDER_DETAILS_REQUEST } from '../constants/orderConstants';
 
-const API = process.env.REACT_APP_API_BASE || '';
+const API = process.env.REACT_APP_API_BASE || 'https://majorproject1-6toy.onrender.com';
 
 // Signup Action Creator
 export const signup = (firstname, lastname, email, password) => async (dispatch) => {

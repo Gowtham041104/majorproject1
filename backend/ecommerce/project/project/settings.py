@@ -28,7 +28,11 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-development-key')
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 # Comma-separated list of allowed hosts, e.g. "api.example.com,.onrender.com"
-ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()] or []
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()] or [
+    'majorproject1-6toy.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 # Applications
 INSTALLED_APPS = [
@@ -129,6 +133,10 @@ else:
 csrf_trusted_env = os.getenv('CSRF_TRUSTED_ORIGINS', '')
 if csrf_trusted_env:
     CSRF_TRUSTED_ORIGINS = [o.strip() for o in csrf_trusted_env.split(',') if o.strip()]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        'https://majorproject1-6toy.onrender.com',
+    ]
 
 APPEND_SLASH = True
 
